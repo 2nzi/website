@@ -16,48 +16,8 @@
     </div>
 
     <section class="split-section">
-      <div class="content-side">
-        <div class="content-wrapper">
-          <h2>Notre Histoire</h2>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
-        </div>
-      </div>
-      <div class="image-side">
-        <div class="sticky-images">
-          <div class="image-container">
-            <img 
-              v-for="(image, index) in images" 
-              :key="index"
-              :src="image.src" 
-              :alt="image.alt"
-              :class="{ active: currentImageIndex === index }"
-            />
-          </div>
-        </div>
-      </div>
+      <HistorySection />
+      <ImageCarousel />
     </section>
   </div>
 </template>
@@ -65,36 +25,16 @@
 <script>
 import NavBar from './components/NavBar.vue'
 import BaseButton from './components/BaseButton.vue'
+import HistorySection from './components/HistorySection.vue'
+import ImageCarousel from './components/ImageCarousel.vue'
 
 export default {
+  name: 'App',
   components: {
     NavBar,
-    BaseButton
-  },
-  data() {
-    return {
-      currentImageIndex: 0,
-      images: [
-        { src: '/affiche-1.jpg', alt: 'Artisanat 1' },
-        { src: '/affiche-2.jpg', alt: 'Artisanat 2' }
-      ],
-      intervalId: null
-    }
-  },
-  mounted() {
-    this.startImageRotation();
-  },
-  beforeUnmount() {
-    if (this.intervalId) {
-      clearInterval(this.intervalId);
-    }
-  },
-  methods: {
-    startImageRotation() {
-      this.intervalId = setInterval(() => {
-        this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
-      }, 5000); // Change d'image toutes les 3 secondes
-    }
+    BaseButton,
+    HistorySection,
+    ImageCarousel
   }
 }
 </script>
@@ -102,12 +42,6 @@ export default {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Urbanist', sans-serif;
-}
 .home-section {
   position: relative;
   min-height: 100svh;
@@ -169,110 +103,14 @@ p {
   background-color: #fff;
 }
 
-.content-side {
-  flex: 1;
-  padding: 4rem;
-}
-
-.content-wrapper {
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: 4rem;
-}
-
-.content-wrapper h2 {
-  font-size: 2.5rem;
-  color: #00253F;
-  margin-bottom: 2rem;
-}
-
-.content-wrapper p {
-  color: #333;
-  margin-bottom: 1.5rem;
-  font-size: 1.1rem;
-  line-height: 1.8;
-}
-
-.image-side {
-  flex: 1;
-  position: relative;
-}
-
-.sticky-images {
-  position: sticky;
-  top: 0;
-  height: 100svh;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.image-container {
-  position: relative;
-  height: 80vh;
-  width: auto;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
-}
-
-.image-container img {
-  position: absolute;
-  height: 100%;
-  width: auto;
-  object-fit: contain;
-  border-radius: 12px;
-  opacity: 0;
-  transition: opacity 0.8s ease-in-out;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.image-container img.active {
-  opacity: 1;
-}
-
 @media (max-width: 768px) {
-  .nav-links.desktop {
-    display: none;
-  }
-
-  .burger-menu {
-    display: flex;
-  }
-
-  .mobile-menu {
-    display: block;
-  }
-
   .cta-buttons {
     flex-direction: column;
     align-items: center;
   }
 
-  .btn {
-    width: 100%;
-    text-align: center;
-  }
-
   .split-section {
     flex-direction: column;
   }
-
-  .content-wrapper {
-    margin-right: auto;
-    padding: 2rem;
-  }
-
-  .sticky-images {
-    position: relative;
-    height: 80vh;
-    padding: 2rem;
-  }
-
-  .image-container {
-    height: 80vh;
-    }
 }
 </style>
