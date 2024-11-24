@@ -2,57 +2,104 @@
   <div id="app">
     <div class="home-section">
       <div class="background-overlay"></div>
-      <header>
-        <nav>
-          <div class="logo">TANAFOUST</div>
-          <div class="nav-links desktop">
-            <a href="#association">L'association</a>
-            <a href="#marches">Marchés</a>
-            <a href="#contact">Contact</a>
-          </div>
-          <button class="burger-menu" @click="toggleMenu">
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-        </nav>
-        <div class="mobile-menu" :class="{ active: isMenuOpen }">
-          <a href="#association">L'association</a>
-          <a href="#marches">Marchés</a>
-          <a href="#contact">Contact</a>
-        </div>
-      </header>
-
+      <NavBar />
       <main class="hero">
         <div class="hero-content">
           <h1>L'ARTISANAT AU NIGER</h1>
           <p>Découvrez l'art Touareg, une expression unique de créativité et de maîtrise artisanale, façonnée au cœur du Niger pour valoriser un patrimoine vivant.</p>
           <div class="cta-buttons">
-            <button class="btn primary">Nous rencontrer</button>
-            <button class="btn secondary">Adhérer</button>
+            <BaseButton variant="primary">Nous rencontrer</BaseButton>
+            <BaseButton variant="secondary">Adhérer</BaseButton>
           </div>
         </div>
       </main>
     </div>
+
+    <section class="split-section">
+      <div class="content-side">
+        <div class="content-wrapper">
+          <h2>Notre Histoire</h2>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+          <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+          <p>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.</p>
+        </div>
+      </div>
+      <div class="image-side">
+        <div class="sticky-images">
+          <div class="image-container">
+            <img 
+              v-for="(image, index) in images" 
+              :key="index"
+              :src="image.src" 
+              :alt="image.alt"
+              :class="{ active: currentImageIndex === index }"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
   </div>
 </template>
 
 <script>
+import NavBar from './components/NavBar.vue'
+import BaseButton from './components/BaseButton.vue'
+
 export default {
+  components: {
+    NavBar,
+    BaseButton
+  },
   data() {
     return {
-      isMenuOpen: false
+      currentImageIndex: 0,
+      images: [
+        { src: '/affiche-1.jpg', alt: 'Artisanat 1' },
+        { src: '/affiche-2.jpg', alt: 'Artisanat 2' }
+      ],
+      intervalId: null
+    }
+  },
+  mounted() {
+    this.startImageRotation();
+  },
+  beforeUnmount() {
+    if (this.intervalId) {
+      clearInterval(this.intervalId);
     }
   },
   methods: {
-    toggleMenu() {
-      this.isMenuOpen = !this.isMenuOpen
+    startImageRotation() {
+      this.intervalId = setInterval(() => {
+        this.currentImageIndex = (this.currentImageIndex + 1) % this.images.length;
+      }, 5000); // Change d'image toutes les 3 secondes
     }
   }
 }
 </script>
 
-<style>
+<style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;600;700&display=swap');
 
 * {
@@ -61,7 +108,6 @@ export default {
   box-sizing: border-box;
   font-family: 'Urbanist', sans-serif;
 }
-
 .home-section {
   position: relative;
   min-height: 100svh;
@@ -84,83 +130,13 @@ export default {
   z-index: 1;
 }
 
-header {
-  position: relative;
-  z-index: 2;
-  padding: 1.5rem;
-}
-
-nav {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.logo {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: white;
-}
-
-.nav-links a {
-  color: white;
-  text-decoration: none;
-  margin-left: 2rem;
-  font-weight: 500;
-}
-
-.burger-menu {
-  display: none;
-  flex-direction: column;
-  gap: 6px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 4px;
-}
-
-.burger-menu span {
-  display: block;
-  width: 25px;
-  height: 2px;
-  background-color: white;
-  transition: all 0.3s ease;
-}
-
-.mobile-menu {
-  display: none;
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  background: rgba(0, 37, 63, 0.95);
-  padding: 1rem;
-  transform: translateY(-100%);
-  transition: transform 0.3s ease;
-}
-
-.mobile-menu.active {
-  transform: translateY(0);
-}
-
-.mobile-menu a {
-  display: block;
-  color: white;
-  text-decoration: none;
-  padding: 1rem;
-  text-align: center;
-  font-weight: 500;
-}
-
 .hero {
   position: relative;
   z-index: 2;
-  min-height: calc(100svh - 90px);
+  min-height: 100svh;
   display: flex;
   align-items: center;
-  justify-content: center;  /* Ajout */
+  justify-content: center;
   padding: 2rem;
 }
 
@@ -169,7 +145,6 @@ nav {
   color: white;
 }
 
-
 h1 {
   font-size: 3.5rem;
   font-weight: 700;
@@ -177,7 +152,6 @@ h1 {
 }
 
 p {
-  font-size: clamp(1rem, 2vw, 1.2rem);
   font-size: clamp(1rem, 2vw, 1.2rem);
   margin-bottom: 2rem;
   font-weight: 500;
@@ -189,26 +163,74 @@ p {
   gap: 1rem;
 }
 
-.btn {
-  padding: 0.6rem 2rem;
-  border: none;
-  border-radius: 1000px;
-  font-size: 1rem;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.3s ease;
-  max-width: 180px;
+.split-section {
+  min-height: 100svh;
+  display: flex;
+  background-color: #fff;
 }
 
-.primary {
-  background-color: transparent;
-  border: 2px solid white;
-  color: white;
+.content-side {
+  flex: 1;
+  padding: 4rem;
 }
 
-.secondary {
-  background-color: white;
-  color: black;
+.content-wrapper {
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: 4rem;
+}
+
+.content-wrapper h2 {
+  font-size: 2.5rem;
+  color: #00253F;
+  margin-bottom: 2rem;
+}
+
+.content-wrapper p {
+  color: #333;
+  margin-bottom: 1.5rem;
+  font-size: 1.1rem;
+  line-height: 1.8;
+}
+
+.image-side {
+  flex: 1;
+  position: relative;
+}
+
+.sticky-images {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.image-container {
+  position: relative;
+  height: 80vh;
+  width: auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.image-container img {
+  position: absolute;
+  height: 100%;
+  width: auto;
+  object-fit: contain;
+  border-radius: 12px;
+  opacity: 0;
+  transition: opacity 0.8s ease-in-out;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.image-container img.active {
+  opacity: 1;
 }
 
 @media (max-width: 768px) {
@@ -233,5 +255,24 @@ p {
     width: 100%;
     text-align: center;
   }
+
+  .split-section {
+    flex-direction: column;
+  }
+
+  .content-wrapper {
+    margin-right: auto;
+    padding: 2rem;
+  }
+
+  .sticky-images {
+    position: relative;
+    height: 80vh;
+    padding: 2rem;
+  }
+
+  .image-container {
+    height: 80vh;
+    }
 }
 </style>
