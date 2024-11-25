@@ -28,7 +28,7 @@
     cursor: pointer;
     font-weight: 600;
     transition: all 0.3s ease;
-    max-width: 180px;
+    max-width: 200px;
   }
   
   .primary {

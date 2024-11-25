@@ -190,7 +190,7 @@
   
   .image-container img {
     width: 100%;
-    height: 70vh;
+    height: 70svh;
     display: block;
     object-fit: cover;
     transition: transform 0.3s ease;
@@ -288,11 +288,11 @@
     .mobile-menu {
       display: block;
     }
-  
+/*   
     .cta-buttons {
       flex-direction: column;
       align-items: center;
-    }
+    } */
   
     .btn {
       width: 100%;

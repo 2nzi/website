@@ -166,7 +166,7 @@
       position: fixed;
       top: 0;
       right: -100%;
-      height: 100vh;
+      height: 100svh;
       width: 100%;
       background: rgba(0, 37, 63, 0.98);
       flex-direction: column;
