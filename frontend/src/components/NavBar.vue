@@ -1,17 +1,18 @@
 <template>
     <header :class="{ 'nav-scrolled': isScrolled }">
       <nav :class="{ 'mobile-nav': isMenuOpen }">
-        <div class="logo">
+        <router-link to="/" class="logo">
           <img src="../assets/tanafoust-logo.png" alt="Tanafoust Logo">
-        </div>
+        </router-link>
         <div class="nav-links" :class="{ 'nav-active': isMenuOpen }">
-          <a v-for="link in links" 
-             :key="link.href" 
-             :href="link.href"
-             @click="closeMenu"
+          <router-link 
+            v-for="link in links" 
+            :key="link.path" 
+            :to="link.path"
+            @click="closeMenu"
           >
             {{ link.text }}
-          </a>
+          </router-link>
         </div>
         <button class="burger-menu" 
           @click="toggleMenu"
@@ -24,7 +25,6 @@
       </nav>
     </header>
   </template>
-  
   <script>
   export default {
     data() {
@@ -32,52 +32,68 @@
         isMenuOpen: false,
         isScrolled: false,
         links: [
-          { href: '#association', text: "L'association" },
-          { href: '#marches', text: 'Marchés' },
-          { href: '#contact', text: 'Contact' }
+          { path: '/association', text: "L'association" },
+          { path: '/marches', text: 'Marchés' },
+          { path: '/contact', text: 'Contact' },
+          { path: '/adherer', text: 'Adhérer' }
         ]
+      }
+    },
+    computed: {
+      isHomePage() {
+        return this.$route.path === '/'
       }
     },
     mounted() {
       window.addEventListener('scroll', this.handleScroll)
+      this.updateBackgroundColor()
     },
     unmounted() {
       window.removeEventListener('scroll', this.handleScroll)
     },
     methods: {
-      handleScroll() {
+    handleScroll() {
+      if (this.isHomePage) {
         const scrollPosition = window.scrollY
         const viewportHeight = window.innerHeight
         this.isScrolled = scrollPosition > viewportHeight * 0.85
-      },
-      toggleMenu() {
-        this.isMenuOpen = !this.isMenuOpen
-        document.body.style.overflow = this.isMenuOpen ? 'hidden' : ''
-      },
-      closeMenu() {
-        this.isMenuOpen = false
-        document.body.style.overflow = ''
+      }
+    },
+    updateBackgroundColor() {
+      this.isScrolled = !this.isHomePage
+    },
+    toggleMenu() {
+      this.isMenuOpen = !this.isMenuOpen
+    },
+    closeMenu() {
+      this.isMenuOpen = false
+    }
+    },
+    watch: {
+      '$route'() {
+        this.updateBackgroundColor()
       }
     }
   }
   </script>
   
+
+
   <style scoped>
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  background-color: transparent; /* Ajout de la couleur de fond par défaut */
-  transition: background-color 0.3s ease; /* Transition pour le changement de couleur */
-}
-
-.nav-scrolled {
-  background-color: #00253F;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-}
-
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 1000;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+  }
+  
+  .nav-scrolled {
+    background-color: #00253F;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  }
   nav {
     display: flex;
     justify-content: space-between;
