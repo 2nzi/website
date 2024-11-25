@@ -1,7 +1,9 @@
 <template>
-    <header>
+    <header :class="{ 'nav-scrolled': isScrolled }">
       <nav :class="{ 'mobile-nav': isMenuOpen }">
-        <div class="logo">TANAFOUST</div>
+        <div class="logo">
+          <img src="../assets/tanafoust-logo.png" alt="Tanafoust Logo">
+        </div>
         <div class="nav-links" :class="{ 'nav-active': isMenuOpen }">
           <a v-for="link in links" 
              :key="link.href" 
@@ -28,6 +30,7 @@
     data() {
       return {
         isMenuOpen: false,
+        isScrolled: false,
         links: [
           { href: '#association', text: "L'association" },
           { href: '#marches', text: 'Marchés' },
@@ -35,7 +38,18 @@
         ]
       }
     },
+    mounted() {
+      window.addEventListener('scroll', this.handleScroll)
+    },
+    unmounted() {
+      window.removeEventListener('scroll', this.handleScroll)
+    },
     methods: {
+      handleScroll() {
+        const scrollPosition = window.scrollY
+        const viewportHeight = window.innerHeight
+        this.isScrolled = scrollPosition > viewportHeight * 0.85
+      },
       toggleMenu() {
         this.isMenuOpen = !this.isMenuOpen
         document.body.style.overflow = this.isMenuOpen ? 'hidden' : ''
@@ -49,30 +63,41 @@
   </script>
   
   <style scoped>
-  header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    z-index: 1000;
-  }
-  
+header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: transparent; /* Ajout de la couleur de fond par défaut */
+  transition: background-color 0.3s ease; /* Transition pour le changement de couleur */
+}
+
+.nav-scrolled {
+  background-color: #00253F;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
   nav {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 2rem 3rem;
+    padding: 1rem 3rem;
     background-color: transparent;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     max-width: 1500px;
     margin: 0 auto;
+    font-family: 'Urbanist', sans-serif;
   }
+
   
   .logo {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: white;
     z-index: 1001;
+  }
+  
+  .logo img {
+    height: 60px;
+    width: auto;
   }
   
   .nav-links {
@@ -140,26 +165,26 @@
     }
   
     .mobile-nav .burger-menu span:nth-child(1) {
-  transform: rotate(45deg) translate(6px, 6px);
-  width: 25px;
-}
-
-.mobile-nav .burger-menu span:nth-child(2) {
-  opacity: 0;
-  transform: translateX(-20px);
-}
-
-.mobile-nav .burger-menu span:nth-child(3) {
-  transform: rotate(-45deg) translate(6px, -6px);
-  width: 25px;
-}
-
-.burger-menu span {
-  width: 25px;
-  height: 2px;
-  background-color: white;
-  transition: all 0.3s ease;
-  transform-origin: center;
-}
+      transform: rotate(45deg) translate(6px, 6px);
+      width: 25px;
+    }
+  
+    .mobile-nav .burger-menu span:nth-child(2) {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+  
+    .mobile-nav .burger-menu span:nth-child(3) {
+      transform: rotate(-45deg) translate(6px, -6px);
+      width: 25px;
+    }
+  
+    .burger-menu span {
+      width: 25px;
+      height: 2px;
+      background-color: white;
+      transition: all 0.3s ease;
+      transform-origin: center;
+    }
   }
   </style>
