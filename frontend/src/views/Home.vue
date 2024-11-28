@@ -37,6 +37,7 @@
                 <span class="arrow">→</span>
               </a>
             </div>
+            <div class="content-wrapper2">
             <h2>Nos Produits</h2>
             <p>Découvrez notre collection de bijoux et d'objets artisanaux touaregs, façonnés avec passion et savoir-faire traditionnel. Chaque pièce raconte une histoire unique et contribue à préserver un artisanat ancestral.</p>
             <div class="products-grid">
@@ -45,6 +46,7 @@
                 <h3>Bijoux</h3>
                 <p>Colliers, bracelets et bagues en argent et pierres semi-précieuses</p>
               </div>
+            </div>
           </div>
           </div>
         </div>
@@ -165,6 +167,11 @@
     margin-right: 4rem;
   }
   
+  .content-wrapper2 {
+    max-width: 600px;
+    margin-left: auto;
+  }
+
   .content-wrapper h2 {
     font-size: 2.5rem;
     color: #00253F;
