@@ -73,7 +73,7 @@ export default {
       const map = L.map('map', {
         zoomControl: false,
         attributionControl: false
-      }).setView([47.2172, -1.5536], 11)
+      }).setView([47.15, -1.6], 10)
       
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 13,
@@ -219,7 +219,7 @@ export default {
   }
 
   .map-container {
-    height: 8%;
+    height: 70svh;
     flex: none;
   }
 
