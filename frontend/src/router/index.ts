@@ -4,6 +4,7 @@ import Association from '@/views/Association.vue'
 import Marches from '@/views/Marches.vue'
 import Contact from '@/views/Contact.vue'
 import Adherer from '@/views/Adherer.vue'
+import Produits from '@/views/Produits.vue'  // Ajoutez cette ligne
 
 const routes: RouteRecordRaw[] = [
   {
@@ -15,6 +16,11 @@ const routes: RouteRecordRaw[] = [
     path: '/association',
     name: 'Association',
     component: Association
+  },
+  {
+    path: '/produits',
+    name: 'Produits',
+    component: Produits
   },
   {
     path: '/marches',

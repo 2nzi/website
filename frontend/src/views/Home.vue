@@ -41,7 +41,7 @@
             <h2>Nos Produits</h2>
             <p>Découvrez notre collection de bijoux et d'objets artisanaux touaregs, façonnés avec passion et savoir-faire traditionnel. Chaque pièce raconte une histoire unique et contribue à préserver un artisanat ancestral.</p>
             <div class="products-grid">
-              <div class="product-card">
+              <div class="product-card" @click="$router.push('/produits')">
                 <img src="https://gundara.com/sites/default/files/jewellery/bracelet-bahu-touareg-niger-gundara.jpg" alt="Bijoux Touaregs">
                 <h3>Bijoux</h3>
                 <p>Colliers, bracelets et bagues en argent et pierres semi-précieuses</p>

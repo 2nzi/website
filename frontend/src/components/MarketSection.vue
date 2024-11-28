@@ -219,7 +219,7 @@ export default {
   }
 
   .map-container {
-    height: 100vh;
+    height: 8%;
     flex: none;
   }
 
