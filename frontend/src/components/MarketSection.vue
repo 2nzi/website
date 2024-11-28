@@ -218,6 +218,7 @@ export default {
     padding: 2rem;
   }
 
+
   .map-container {
     height: 70svh;
     flex: none;
