@@ -33,6 +33,8 @@
         isScrolled: false,
         links: [
           { path: '/association', text: "L'association" },
+          { path: '/artisans', text: "Les artisans" },
+          { path: '/produits', text: "Les bijoux" },
           { path: '/marches', text: 'Marchés' },
           { path: '/contact', text: 'Contact' },
           { path: '/adherer', text: 'Adhérer' }

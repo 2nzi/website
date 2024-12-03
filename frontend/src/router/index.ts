@@ -5,12 +5,18 @@ import Marches from '@/views/Marches.vue'
 import Contact from '@/views/Contact.vue'
 import Adherer from '@/views/Adherer.vue'
 import Produits from '@/views/Produits.vue'  // Ajoutez cette ligne
+import ArtisansView from '@/views/ArtisansView.vue'  // Add this line
 
 const routes: RouteRecordRaw[] = [
   {
     path: '/',
     name: 'Home',
     component: Home
+  },
+  {
+    path: '/artisans',
+    name: 'Artisans',
+    component: ArtisansView
   },
   {
     path: '/association',
