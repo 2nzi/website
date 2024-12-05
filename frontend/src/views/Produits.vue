@@ -2,10 +2,10 @@
     <div class="produits">
       <NavBar />
       <div class="page-content">
-        <h1>Nos Bijoux Touaregs</h1>
+        <h1>Les Bijoux Touaregs</h1>
         <div class="content-wrapper">
           <p class="description">
-            Découvrez notre collection de bijoux artisanaux touaregs, chaque pièce est unique et fabriquée à la main par nos artisans d'Abalak.
+            Découvrez la collection de bijoux artisanaux touaregs, chaque pièce est unique et fabriquée à la main par nos artisans d'Abalak.
           </p>
           <div class="gallery">
             <div v-for="(image, index) in images" 

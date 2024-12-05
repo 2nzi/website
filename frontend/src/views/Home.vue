@@ -28,17 +28,28 @@
             <div class="image-container">
               <img src="@/assets/art1.jpg" alt="Artisanat Touareg">
             </div>
-            <h2>Notre Histoire</h2>
-            <p>L'association TANAFOUST est née de la volonté de promouvoir l'artisanat traditionnel Touareg et de soutenir les artisans et artisanes de la région d'Abalak, au Niger.</p>
-            <p>Depuis sa création, notre mission est de faire découvrir en France un savoir-faire unique tout en contribuant au développement durable de communautés locales.</p>
-            <div class="read-more">
-              <a href="/association" class="read-more-link">
-                En savoir plus sur notre association
-                <span class="arrow">→</span>
-              </a>
-            </div>
+            <h2>Notre mission</h2>
+            <p>Fondée en 2014, l'association TANAFOUST, dont le nom signifie "Bonne Action" en langue Tamacheq, incarne un engagement profond envers la solidarité internationale. Sa mission principale est double :</p>
+            
+            <p>1. Mettre en lumière et valoriser en France l'artisanat traditionnel du village de Tebade Abalak, situé dans la République du Niger.</p>
+            
+            <p>2. Faciliter l'exposition et la commercialisation des bijoux touaregs, véritables chefs-d'œuvre de l'art saharien.</p>
+            
+            <p>TANAFOUST agit comme un pont culturel, reliant les artisans talentueux du Niger au marché français. L'association s'efforce de préserver et promouvoir un savoir-faire ancestral, tout en offrant des opportunités économiques cruciales à la communauté locale.</p>
+            
+            <p>Les recettes générés par les ventes de bijoux et autres produits artisanaux ont un impact direct et significatif. Ils soutiennent environ quarante familles nigériennes, contribuant ainsi à :</p>
+            
+            <ul style="margin-left: 20px; margin-bottom: 1.5rem; color: #333; line-height: 1.8;">
+              <li>Améliorer leurs conditions de vie</li>
+              <li>Renforcer l'autonomie économique des artisans, en particulier des femmes</li>
+              <li>Préserver les techniques artisanales traditionnelles</li>
+              <li>Encourager le développement durable de la région</li>
+            </ul>
+            
+            <p>Par son action, TANAFOUST ne se contente pas de promouvoir l'art touareg ; elle tisse des liens de solidarité entre la France et le Niger, tout en participant activement au développement socio-économique d'une communauté sahélienne.</p>
+            
             <div class="content-wrapper2">
-            <h2>Nos Produits</h2>
+            <h2>Les bijoux</h2>
             <p>Découvrez notre collection de bijoux et d'objets artisanaux touaregs, façonnés avec passion et savoir-faire traditionnel. Chaque pièce raconte une histoire unique et contribue à préserver un artisanat ancestral.</p>
             <div class="products-grid">
               <div class="product-card" @click="$router.push('/produits')">
@@ -204,34 +215,7 @@
   .image-container:hover img {
     transform: scale(1.02);
   }
-  
-  .read-more {
-    margin: 2rem 0 3rem 0;
-  }
-  
-  .read-more-link {
-    display: inline-flex;
-    align-items: center;
-    color: #1D5891;
-    text-decoration: none;
-    font-weight: 500;
-    font-size: 1.1rem;
-    transition: all 0.3s ease;
-  }
-  
-  .read-more-link .arrow {
-    margin-left: 0.5rem;
-    transition: transform 0.3s ease;
-  }
-  
-  .read-more-link:hover {
-    color: #00253F;
-  }
-  
-  .read-more-link:hover .arrow {
-    transform: translateX(5px);
-  }
-  
+    
   .products-section {
     background-color: #f8f9fa;
     padding: 6rem 0;

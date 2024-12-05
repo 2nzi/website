@@ -4,15 +4,7 @@
     <div class="page-content">
       <h1>Adhérer à l'association</h1>
       <div class="content-wrapper">
-        <div class="adhesion-info">
-          <h2>Notre mission</h2>
-          <p>L'association de solidarité internationale TANAFOUST a pour objet :</p>
-          <ul>
-            <li>De faire connaître et promouvoir en France le savoir-faire des artisans et des artisanes du village de Tebade Abalak (République du Niger)</li>
-            <li>D'aider à l'exposition et la vente de bijoux touareg</li>
-            <li>Les sommes récoltées bénéficient à une quarantaine de familles au Niger</li>
-          </ul>
-        </div>
+
 
         <div class="adhesion-details">
           <div class="cotisation">
