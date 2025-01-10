@@ -19,6 +19,15 @@
         </main>
       </div>
   
+      <section class="video-section">
+        <div class="video-wrapper">
+          <video controls>
+            <source src="/public/Interview-Hamataye.mp4" type="video/mp4">
+            Votre navigateur ne supporte pas la lecture de vidéos.
+          </video>
+        </div>
+      </section>
+
       <section id="nous-rencontrer" class="split-section">
         <div class="content-side">
           <div class="content-wrapper">
@@ -318,6 +327,34 @@
   .globe-wrapper {
     width: 450px;
     height: 800px;
+  }
+}
+
+
+.video-section {
+  margin-top: 5rem;
+  margin-bottom: 5rem;
+  width: 100%;
+  padding: 4rem 2rem;
+  background-color: #F0F0F0;
+}
+
+.video-wrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  border-radius: 15px;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+}
+
+.video-wrapper video {
+  width: 100%;
+  display: block;
+}
+
+@media (max-width: 768px) {
+  .video-section {
+    padding: 2rem 1rem;
   }
 }
 
