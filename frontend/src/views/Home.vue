@@ -63,20 +63,28 @@
         </div>
         <MarketSection />
       </section>
+      <div class="globe-section">
+        <div class="globe-wrapper">
+          <Globe />
+        </div>
+      </div>
     </div>
+
   </template>
 
   <script>
   import NavBar from '@/components/NavBar.vue'
   import BaseButton from '@/components/BaseButton.vue'
   import MarketSection from '@/components/MarketSection.vue'
-  
+  import Globe from '@/components/Globe.vue'
+
   export default {
     name: 'Home',
     components: {
       NavBar,
       BaseButton,
-      MarketSection
+      MarketSection,
+      Globe
     },
     methods: {
     scrollToSection(sectionId) {
@@ -264,8 +272,57 @@
     margin: 0 1rem 1.5rem;
     line-height: 1.5;
   }
+
   
+  .globe-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background: white;
+}
+
+.globe-wrapper {
+  border-radius: 15px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+
+@media (max-width: 480px) {
+  .globe-wrapper {
+    width: 280px;
+    height: 500px;
+  }
+}
+
+@media (min-width: 481px) and (max-width: 768px) {
+  .globe-wrapper {
+    width: 350px;
+    height: 620px;
+  }
+}
+
+@media (min-width: 769px) and (max-width: 1024px) {
+  .globe-wrapper {
+    width: 400px;
+    height: 710px;
+  }
+}
+
+@media (min-width: 1025px) {
+  .globe-wrapper {
+    width: 450px;
+    height: 800px;
+  }
+}
+
   @media (max-width: 768px) {
+
     .nav-links.desktop {
       display: none;
     }
