@@ -8,8 +8,19 @@
           <p class="date">{{ selectedMarket.date }}</p>
           <p>{{ selectedMarket.venue }}</p>
           <p v-if="selectedMarket.address">{{ selectedMarket.address }}</p>
-          <a v-if="selectedMarket.link" :href="selectedMarket.link" target="_blank">Plus d'informations</a>
+          <a v-if="selectedMarket.link" 
+             @click.prevent="handleInfoClick(selectedMarket)" 
+             :href="selectedMarket.link" 
+             target="_blank">Plus d'informations</a>
         </div>
+      </div>
+    </div>
+    
+    <!-- Nouvel overlay pour l'image -->
+    <div v-if="showImageOverlay" class="image-overlay" @click="showImageOverlay = false">
+      <div class="overlay-content">
+        <img src="@/assets/affiche_marche.png" alt="Affiche Nantes">
+        <button class="close-button" @click="showImageOverlay = false">&times;</button>
       </div>
     </div>
   </div>
@@ -18,50 +29,38 @@
 <script>
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
-
+                                                                  
 export default {
   name: 'MarketSection',
   data() {
     return {
       selectedMarket: null,
+      showImageOverlay: false,
       markets: [
         {
-          location: 'COUERON',
-          date: 'Samedi 30/11/2024',
-          venue: 'Foyer laïc de la Chabossière',
-          address: '9 rue Rouget de l\'Isle',
-          link: 'https://csc-henri-normand.centres-sociaux.fr/marche-de-noel-2024/',
-          coordinates: [47.2172, -1.7239]
+          location: 'NANTES',
+          date: 'Samedi 17/05/2025 et Dimanche 18/05/2025',
+          venue: 'Le Solilab',
+          address: '8 Rue St Domingue, 44000 Nantes',
+          link: 'https://www.facebook.com/solilabnantes/?locale=fr_FR',
+          coordinates: [47.2010925, -1.5702397]
         },
         {
-          location: 'SAINT HERBLAIN',
-          date: 'Dimanche 01/12/2024',
-          venue: 'Salle polyvalente René-Guy Cadou',
-          address: '2 rue du Bois de Lagland',
-          coordinates: [47.2230, -1.6347]
+          location: 'ANCENIS',
+          date: 'Jeudi 20/05/2025',
+          venue: 'Le marché de l\'Ascension',
+          address: '9 rue Rouget de l\'Isle',
+          link: 'https://ancenis-saint-gereon.fr/le-marche-de-lascension/',
+          coordinates: [47.3682464, -1.1844303]
         },
         {
           location: 'LA CHAPELLE SUR ERDRE',
-          date: 'Samedi 07/12/2024 et Dimanche 08/12/2024',
-          venue: 'Salle Jean Jaurès',
-          link: 'https://www.lachapellesurerdre.fr/marche-de-noel-solidaire',
-          coordinates: [47.2861, -1.5497]
+          date: 'Dimanche 15/06/2025',
+          venue: 'Foire a tout',
+          address: 'Centre ville',
+          link: '',
+          coordinates: [47.299999,  -1.55]
         },
-        {
-          location: 'NANTES',
-          date: 'Samedi 07/12/2024 et Dimanche 08/12/2024',
-          venue: 'Festival DRESS CODE - Espace Cosmopolis',
-          address: '18 rue Scribe',
-          link: 'https://cosmopolis.nantes.fr/evenements/waxmania-dress-code/',
-          coordinates: [47.2155, -1.5536]
-        },
-        {
-          location: 'SAINTE LUCE SUR LOIRE',
-          date: 'Samedi 14/12/2024 de 9h à 18h',
-          venue: 'Salle Louis Dagorne',
-          link: 'https://www.sainte-luce-loire.com/agenda/marche-de-noel-solidaire-4/',
-          coordinates: [47.2497, -1.4797]
-        }
       ]
     }
   },
@@ -73,11 +72,11 @@ export default {
       const map = L.map('map', {
         zoomControl: false,
         attributionControl: false
-      }).setView([47.15, -1.6], 10)
+      }).setView([47.15, -1.45], 10)
       
       L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
         maxZoom: 13,
-        minZoom: 10
+        minZoom: 5
       }).addTo(map)
 
       const customIcon = {
@@ -121,6 +120,13 @@ export default {
       this.selectedMarket = this.markets[0]
       markers[this.markets[0].location].setIcon(customIcon.selected)
       currentSelectedMarker = markers[this.markets[0].location]
+    },
+    handleInfoClick(market) {
+      if (market.location === 'NANTES') {
+        this.showImageOverlay = true;
+      } else {
+        window.open(market.link, '_blank');
+      }
     }
   }
 }
@@ -226,6 +232,82 @@ export default {
 
   #map {
     height: 50vh;
+  }
+}
+
+.image-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+}
+
+.overlay-content {
+  position: relative;
+  width: 100%;
+  max-width: 90%;
+  max-height: 90vh;
+  display: flex;
+  justify-content: center;
+}
+
+.overlay-content img {
+  max-width: 100%;
+  max-height: 90vh;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.close-button {
+  position: absolute;
+  top: -40px;
+  right: 0;
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2rem;
+  cursor: pointer;
+  padding: 10px;
+  z-index: 1001;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@media (max-width: 768px) {
+  .image-overlay {
+    padding: 0.5rem;
+  }
+
+  .overlay-content {
+    max-width: 100%;
+    max-height: 100vh;
+  }
+
+  .close-button {
+    top: 10px;
+    right: 10px;
+    font-size: 2rem;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    color: #ffffff;
+    text-shadow: 0 0 3px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  }
+
+  .close-button:active {
+    background-color: rgba(0, 0, 0, 0.9);
   }
 }
 </style>
