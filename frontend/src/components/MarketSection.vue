@@ -19,19 +19,30 @@
             </router-link>
           </template>
 
-          <!-- Mode full (Page Marchés) : Images et infos complètes -->
+          <!-- Mode full (Page Marchés) : Images/Vidéos et infos complètes -->
           <template v-else>
-            <!-- Carousel d'images -->
-            <div v-if="selectedMarket.images && selectedMarket.images.length > 0" class="images-carousel">
+            <!-- Carousel d'images et vidéos -->
+            <div v-if="selectedMarket.media && selectedMarket.media.length > 0" class="images-carousel">
               <div class="carousel-container" ref="carouselContainer">
                 <div class="carousel-track" :style="{ transform: `translateX(-${currentImageIndex * 100}%)` }">
-                  <div v-for="(image, index) in selectedMarket.images" :key="index" class="carousel-slide">
-                    <img :src="image" :alt="`${selectedMarket.location} - Image ${index + 1}`" @click="showImage(image)">
+                  <div v-for="(mediaItem, index) in selectedMarket.media" :key="index" class="carousel-slide">
+                    <img v-if="mediaItem.type === 'image'"
+                         :src="mediaItem.src"
+                         :alt="`${selectedMarket.location} - Image ${index + 1}`"
+                         @click="showImage(mediaItem.src)">
+                    <video v-else-if="mediaItem.type === 'video'"
+                           :src="mediaItem.src"
+                           :ref="`video-${index}`"
+                           muted
+                           playsinline
+                           class="carousel-video"
+                           @loadedmetadata="onVideoLoaded"
+                           @ended="onVideoEnded"></video>
                   </div>
                 </div>
               </div>
-              <div v-if="selectedMarket.images.length > 1" class="carousel-dots">
-                <span v-for="(image, index) in selectedMarket.images" :key="index"
+              <div v-if="selectedMarket.media.length > 1" class="carousel-dots">
+                <span v-for="(mediaItem, index) in selectedMarket.media" :key="index"
                       :class="['dot', { active: currentImageIndex === index }]"
                       @click="currentImageIndex = index"></span>
               </div>
@@ -76,6 +87,7 @@ export default {
       currentAffiche: null,
       currentImageIndex: 0,
       carouselInterval: null,
+      isVideoPlaying: false,
       markets: [
         {
           location: 'PONT-CHÂTEAU',
@@ -84,7 +96,11 @@ export default {
           address: '25 Rue Maurice Sambron, 44160 Pontchâteau',
           description: 'Venez découvrir notre collection de bijoux et objets artisanaux touaregs lors du Grand Marché de Noël de Pont-Château. Une belle occasion de trouver des cadeaux uniques et authentiques.',
           link: 'https://www.pontchateau.fr',
-          images: ['/affiche-pontchateau.jpg', '/amatai.jpg'],
+          media: [
+            { type: 'image', src: '/affiche-pontchateau.jpg' },
+            { type: 'image', src: '/amatai.jpg' },
+            { type: 'video', src: '/pontchateau.mp4' }
+          ],
           coordinates: [47.437639120284054, -2.093476531103958]
         },
         {
@@ -94,7 +110,9 @@ export default {
           address: '8 Rue St Domingue, 44000 Nantes',
           description: 'Retrouvez-nous au Solilab à Nantes pour découvrir notre artisanat touareg et soutenir les artisans d\'Abalak. Bijoux en argent, bracelets, colliers et bien plus encore.',
           link: 'https://www.facebook.com/solilabnantes/?locale=fr_FR',
-          images: ['/affiche-1.jpg'],
+          media: [
+            { type: 'image', src: '/affiche-1.jpg' }
+          ],
           coordinates: [47.2010925, -1.5702397]
         },
         {
@@ -126,16 +144,36 @@ export default {
   watch: {
     selectedMarket() {
       this.currentImageIndex = 0
+      this.isVideoPlaying = false
       this.stopCarousel()
       this.startCarousel()
+    },
+    currentImageIndex(newIndex) {
+      // Quand on arrive sur une vidéo, la démarrer et stopper le carousel
+      if (this.selectedMarket && this.selectedMarket.media && this.selectedMarket.media[newIndex]) {
+        const currentMedia = this.selectedMarket.media[newIndex]
+        if (currentMedia.type === 'video') {
+          this.$nextTick(() => {
+            const videoRef = this.$refs[`video-${newIndex}`]
+            if (videoRef && videoRef[0]) {
+              this.isVideoPlaying = true
+              this.stopCarousel()
+              videoRef[0].play()
+            }
+          })
+        }
+      }
     }
   },
   methods: {
     startCarousel() {
-      if (this.selectedMarket && this.selectedMarket.images && this.selectedMarket.images.length > 1) {
+      if (this.selectedMarket && this.selectedMarket.media && this.selectedMarket.media.length > 1 && !this.isVideoPlaying) {
         this.carouselInterval = setInterval(() => {
-          this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedMarket.images.length
-        }, 3000)
+          // Ne pas avancer si une vidéo est en cours
+          if (!this.isVideoPlaying) {
+            this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedMarket.media.length
+          }
+        }, 5000)
       }
     },
     stopCarousel() {
@@ -207,6 +245,18 @@ export default {
     showImage(imageSrc) {
       this.currentAffiche = imageSrc
       this.showImageOverlay = true
+    },
+    onVideoLoaded() {
+      // Vidéo chargée et prête
+    },
+    onVideoEnded() {
+      // Vidéo terminée, passer au slide suivant
+      this.isVideoPlaying = false
+      this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedMarket.media.length
+      // Redémarrer le carousel pour les images
+      if (this.selectedMarket.media[this.currentImageIndex].type === 'image') {
+        this.startCarousel()
+      }
     }
   }
 }
@@ -316,17 +366,25 @@ export default {
   flex-shrink: 0;
 }
 
-.carousel-slide img {
+.carousel-slide img,
+.carousel-slide video {
   width: 100%;
   height: auto;
   max-height: 500px;
   object-fit: contain;
-  cursor: pointer;
   transition: transform 0.3s ease;
+}
+
+.carousel-slide img {
+  cursor: pointer;
 }
 
 .carousel-slide img:hover {
   transform: scale(1.02);
+}
+
+.carousel-video {
+  border-radius: 8px;
 }
 
 .carousel-dots {
@@ -415,8 +473,9 @@ export default {
     height: 300px;
   }
 
-  /* Sur mobile, afficher les images en plein dans la market-info */
-  .carousel-slide img {
+  /* Sur mobile, afficher les images et vidéos en plein dans la market-info */
+  .carousel-slide img,
+  .carousel-slide video {
     height: auto;
     max-height: 400px;
     object-fit: contain;
