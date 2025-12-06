@@ -33,8 +33,8 @@
                     <video v-else-if="mediaItem.type === 'video'"
                            :src="mediaItem.src"
                            :ref="`video-${index}`"
-                           muted
                            playsinline
+                           controls
                            class="carousel-video"
                            @loadedmetadata="onVideoLoaded"
                            @ended="onVideoEnded"></video>
