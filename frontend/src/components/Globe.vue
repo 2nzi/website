@@ -45,7 +45,7 @@ export default {
 
           const world = Globe()
             .backgroundColor("white")
-            .globeImageUrl("../public/earth-blue.png")
+            .globeImageUrl("/earth-blue.png")
             .width(this.globeWidth)
             .height(this.globeHeight)
             .hexPolygonsData(countries.features)

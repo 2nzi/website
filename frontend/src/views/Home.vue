@@ -22,7 +22,7 @@
       <section class="video-section">
         <div class="video-wrapper">
           <video controls>
-            <source src="/public/Interview-Hamataye.mp4" type="video/mp4">
+            <source src="/Interview-Hamataye.mp4" type="video/mp4">
             Votre navigateur ne supporte pas la lecture de vidéos.
           </video>
         </div>
