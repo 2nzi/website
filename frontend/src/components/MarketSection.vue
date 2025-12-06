@@ -24,6 +24,14 @@
             <!-- Carousel d'images et vidéos -->
             <div v-if="selectedMarket.media && selectedMarket.media.length > 0" class="images-carousel">
               <div class="carousel-container" ref="carouselContainer">
+                <!-- Flèche gauche -->
+                <button v-if="selectedMarket.media.length > 1"
+                        class="carousel-arrow prev"
+                        @click="prevSlide"
+                        aria-label="Image précédente">
+                  ‹
+                </button>
+
                 <div class="carousel-track" :style="{ transform: `translateX(-${currentImageIndex * 100}%)` }">
                   <div v-for="(mediaItem, index) in selectedMarket.media" :key="index" class="carousel-slide">
                     <img v-if="mediaItem.type === 'image'"
@@ -32,14 +40,19 @@
                          @click="showImage(mediaItem.src)">
                     <video v-else-if="mediaItem.type === 'video'"
                            :src="mediaItem.src"
-                           :ref="`video-${index}`"
                            playsinline
                            controls
-                           class="carousel-video"
-                           @loadedmetadata="onVideoLoaded"
-                           @ended="onVideoEnded"></video>
+                           class="carousel-video"></video>
                   </div>
                 </div>
+
+                <!-- Flèche droite -->
+                <button v-if="selectedMarket.media.length > 1"
+                        class="carousel-arrow next"
+                        @click="nextSlide"
+                        aria-label="Image suivante">
+                  ›
+                </button>
               </div>
               <div v-if="selectedMarket.media.length > 1" class="carousel-dots">
                 <span v-for="(mediaItem, index) in selectedMarket.media" :key="index"
@@ -86,8 +99,6 @@ export default {
       showImageOverlay: false,
       currentAffiche: null,
       currentImageIndex: 0,
-      carouselInterval: null,
-      isVideoPlaying: false,
       markets: [
         {
           location: 'PONT-CHÂTEAU',
@@ -136,50 +147,21 @@ export default {
   },
   mounted() {
     this.initMap()
-    this.startCarousel()
-  },
-  beforeUnmount() {
-    this.stopCarousel()
   },
   watch: {
     selectedMarket() {
       this.currentImageIndex = 0
-      this.isVideoPlaying = false
-      this.stopCarousel()
-      this.startCarousel()
-    },
-    currentImageIndex(newIndex) {
-      // Quand on arrive sur une vidéo, la démarrer et stopper le carousel
-      if (this.selectedMarket && this.selectedMarket.media && this.selectedMarket.media[newIndex]) {
-        const currentMedia = this.selectedMarket.media[newIndex]
-        if (currentMedia.type === 'video') {
-          this.$nextTick(() => {
-            const videoRef = this.$refs[`video-${newIndex}`]
-            if (videoRef && videoRef[0]) {
-              this.isVideoPlaying = true
-              this.stopCarousel()
-              videoRef[0].play()
-            }
-          })
-        }
-      }
     }
   },
   methods: {
-    startCarousel() {
-      if (this.selectedMarket && this.selectedMarket.media && this.selectedMarket.media.length > 1 && !this.isVideoPlaying) {
-        this.carouselInterval = setInterval(() => {
-          // Ne pas avancer si une vidéo est en cours
-          if (!this.isVideoPlaying) {
-            this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedMarket.media.length
-          }
-        }, 5000)
+    nextSlide() {
+      if (this.selectedMarket && this.selectedMarket.media) {
+        this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedMarket.media.length
       }
     },
-    stopCarousel() {
-      if (this.carouselInterval) {
-        clearInterval(this.carouselInterval)
-        this.carouselInterval = null
+    prevSlide() {
+      if (this.selectedMarket && this.selectedMarket.media) {
+        this.currentImageIndex = (this.currentImageIndex - 1 + this.selectedMarket.media.length) % this.selectedMarket.media.length
       }
     },
     initMap() {
@@ -245,18 +227,6 @@ export default {
     showImage(imageSrc) {
       this.currentAffiche = imageSrc
       this.showImageOverlay = true
-    },
-    onVideoLoaded() {
-      // Vidéo chargée et prête
-    },
-    onVideoEnded() {
-      // Vidéo terminée, passer au slide suivant
-      this.isVideoPlaying = false
-      this.currentImageIndex = (this.currentImageIndex + 1) % this.selectedMarket.media.length
-      // Redémarrer le carousel pour les images
-      if (this.selectedMarket.media[this.currentImageIndex].type === 'image') {
-        this.startCarousel()
-      }
     }
   }
 }
@@ -354,6 +324,7 @@ export default {
   width: 100%;
   overflow: hidden;
   border-radius: 8px;
+  position: relative;
 }
 
 .carousel-track {
@@ -363,16 +334,21 @@ export default {
 
 .carousel-slide {
   min-width: 100%;
+  width: 100%;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f8f9fa;
+  padding: 1rem 0;
 }
 
 .carousel-slide img,
 .carousel-slide video {
-  width: 100%;
+  display: block;
+  max-width: 100%;
   height: auto;
-  max-height: 500px;
   object-fit: contain;
-  transition: transform 0.3s ease;
 }
 
 .carousel-slide img {
@@ -385,6 +361,42 @@ export default {
 
 .carousel-video {
   border-radius: 8px;
+}
+
+/* Flèches de navigation */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 37, 63, 0.7);
+  color: white;
+  border: none;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  font-size: 2rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  line-height: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+.carousel-arrow:hover {
+  background-color: rgba(29, 88, 145, 0.9);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-arrow.prev {
+  left: 10px;
+}
+
+.carousel-arrow.next {
+  right: 10px;
 }
 
 .carousel-dots {
@@ -473,16 +485,41 @@ export default {
     height: 300px;
   }
 
-  /* Sur mobile, afficher les images et vidéos en plein dans la market-info */
+  /* Sur mobile */
+  .map-container {
+    height: auto;
+    flex: none;
+    gap: 1rem;
+  }
+
+  .carousel-slide {
+    padding: 0.5rem;
+  }
+
   .carousel-slide img,
   .carousel-slide video {
+    width: 100%;
+    max-width: 100%;
     height: auto;
-    max-height: 400px;
-    object-fit: contain;
   }
 
   .market-info {
     padding: 1rem;
+  }
+
+  /* Flèches plus petites sur mobile */
+  .carousel-arrow {
+    width: 40px;
+    height: 40px;
+    font-size: 1.75rem;
+  }
+
+  .carousel-arrow.prev {
+    left: 5px;
+  }
+
+  .carousel-arrow.next {
+    right: 5px;
   }
 }
 
