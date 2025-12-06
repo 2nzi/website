@@ -70,7 +70,7 @@
           </div>
           </div>
         </div>
-        <MarketSection />
+        <MarketSection displayMode="compact" />
       </section>
       <div class="globe-section">
         <div class="globe-wrapper">
