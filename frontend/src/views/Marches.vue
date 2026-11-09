@@ -18,21 +18,6 @@
     components: {
       NavBar,
       MarketSection
-    },
-    data() {
-      return {
-        markets: [
-          // Utiliser les mêmes données que dans MarketSection.vue
-          {
-            location: 'COUERON',
-            date: 'Samedi 30/11/2024',
-            venue: 'Foyer laïc de la Chabossière',
-            address: '9 rue Rouget de l\'Isle',
-            link: 'https://csc-henri-normand.centres-sociaux.fr/marche-de-noel-2024/'
-          },
-          // ... autres marchés
-        ]
-      }
     }
   }
   </script>

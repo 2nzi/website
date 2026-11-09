@@ -4,7 +4,7 @@
       <div class="map-container">
         <div id="map"></div>
         <div class="market-info" v-if="selectedMarket">
-          <h3>{{ selectedMarket.location }}</h3>
+          <h3>{{ selectedMarket.location }}<span v-if="isPast(selectedMarket)" class="past-badge">Terminé</span></h3>
           <p class="date">{{ selectedMarket.date }}</p>
           <p>{{ selectedMarket.venue }}</p>
           <p v-if="selectedMarket.address">{{ selectedMarket.address }}</p>
@@ -14,7 +14,7 @@
             <p class="market-description">
               {{ selectedMarket.description || 'Découvrez notre présence lors de cet événement avec notre sélection de bijoux et objets artisanaux touaregs.' }}
             </p>
-            <router-link to="/marches" class="see-more-btn">
+            <router-link :to="{ path: '/marches', query: { marche: selectedMarket.location } }" class="see-more-btn">
               Voir plus d'informations et photos
             </router-link>
           </template>
@@ -99,48 +99,32 @@ export default {
       showImageOverlay: false,
       currentAffiche: null,
       currentImageIndex: 0,
+      // endDate (AAAA-MM-JJ) : dernier jour de l'événement. Sert à marquer
+      // automatiquement les événements passés et à sélectionner le prochain.
       markets: [
         {
-          location: 'PONT-CHÂTEAU',
-          date: 'Samedi 06/12/2025 et Dimanche 07/12/2025',
-          venue: 'Grand Marché de Noël',
-          address: '25 Rue Maurice Sambron, 44160 Pontchâteau',
-          description: 'Venez découvrir notre collection de bijoux et objets artisanaux touaregs lors du Grand Marché de Noël de Pont-Château. Une belle occasion de trouver des cadeaux uniques et authentiques.',
-          link: 'https://www.pontchateau.fr',
+          location: 'SAINT-LAURENT-DES-AUTELS',
+          date: 'Samedi 21/11/2026 et Dimanche 22/11/2026',
+          endDate: '2026-11-22',
+          venue: 'La Féérie de Noël – Salle Laurenthéa',
+          address: 'Rue du Stade, 49270 Orée d\'Anjou',
+          description: 'Retrouvez-nous à la Féérie de Noël, de 10h à 18h, avec créateurs, artisans et vendeurs : une belle occasion de découvrir nos bijoux et objets artisanaux touaregs.',
           media: [
-            { type: 'image', src: '/affiche-pontchateau.jpg' },
-            { type: 'image', src: '/amatai.jpg' },
-            { type: 'video', src: '/pontchateau.mp4' }
+            { type: 'image', src: '/affiche-saint-laurent.png' }
           ],
-          coordinates: [47.437639120284054, -2.093476531103958]
+          coordinates: [47.2903154, -1.1883383]
         },
         {
-          location: 'NANTES',
-          date: 'Samedi 17/05/2025 et Dimanche 18/05/2025',
-          venue: 'Le Solilab',
-          address: '8 Rue St Domingue, 44000 Nantes',
-          description: 'Retrouvez-nous au Solilab à Nantes pour découvrir notre artisanat touareg et soutenir les artisans d\'Abalak. Bijoux en argent, bracelets, colliers et bien plus encore.',
-          link: 'https://www.facebook.com/solilabnantes/?locale=fr_FR',
+          location: 'ANCENIS-SAINT-GÉRÉON',
+          date: 'Samedi 28/11/2026 (14h-20h) et Dimanche 29/11/2026 (10h-18h)',
+          endDate: '2026-11-29',
+          venue: 'Marché de Noël – Salle de la Charbonnière',
+          address: 'Saint-Géréon, 44150 Ancenis-Saint-Géréon',
+          description: 'Plus de 100 exposants, entrée gratuite, restauration sur place. Venez nous rencontrer pour découvrir nos bijoux et objets artisanaux touaregs.',
           media: [
-            { type: 'image', src: '/affiche-1.jpg' }
+            { type: 'image', src: '/affiche-saint-gereon.png' }
           ],
-          coordinates: [47.2010925, -1.5702397]
-        },
-        {
-          location: 'ANCENIS',
-          date: 'Jeudi 20/05/2025',
-          venue: 'Le marché de l\'Ascension',
-          address: '9 rue Rouget de l\'Isle',
-          link: 'https://ancenis-saint-gereon.fr/le-marche-de-lascension/',
-          coordinates: [47.3682464, -1.1844303]
-        },
-        {
-          location: 'LA CHAPELLE SUR ERDRE',
-          date: 'Dimanche 15/06/2025',
-          venue: 'Foire a tout',
-          address: 'Centre ville',
-          link: '',
-          coordinates: [47.299999,  -1.55]
+          coordinates: [47.3917, -1.1567]
         },
       ]
     }
@@ -164,16 +148,25 @@ export default {
         this.currentImageIndex = (this.currentImageIndex - 1 + this.selectedMarket.media.length) % this.selectedMarket.media.length
       }
     },
+    isPast(market) {
+      if (!market.endDate) return false
+      const end = new Date(market.endDate + 'T23:59:59')
+      return end < new Date()
+    },
     initMap() {
       const map = L.map('map', {
         zoomControl: false,
         attributionControl: false
       }).setView([46.5, 0.5], 7)
 
-      L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      // Tuiles OpenStreetMap : gratuites, sans clé API (CARTO en exige une désormais)
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
         maxZoom: 13,
         minZoom: 5
       }).addTo(map)
+      L.control.attribution({ prefix: false, position: 'bottomright' })
+        .addAttribution('© <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap</a>')
+        .addTo(map)
 
       const customIcon = {
         default: L.divIcon({
@@ -181,6 +174,12 @@ export default {
           html: '<div class="marker-inner"></div>',
           iconSize: [18, 18],
           iconAnchor: [9, 9]
+        }),
+        past: L.divIcon({
+          className: 'custom-marker past',
+          html: '<div class="marker-inner"></div>',
+          iconSize: [14, 14],
+          iconAnchor: [7, 7]
         }),
         selected: L.divIcon({
           className: 'custom-marker selected',
@@ -195,15 +194,16 @@ export default {
 
       this.markets.forEach(market => {
         const marker = L.marker(market.coordinates, {
-          icon: customIcon.default
+          icon: this.isPast(market) ? customIcon.past : customIcon.default
         }).addTo(map)
 
+        marker._past = this.isPast(market)
         markers[market.location] = marker
 
         marker.on('click', () => {
           // Désélectionner le marqueur précédent s'il existe
           if (currentSelectedMarker) {
-            currentSelectedMarker.setIcon(customIcon.default)
+            currentSelectedMarker.setIcon(currentSelectedMarker._past ? customIcon.past : customIcon.default)
           }
           // Sélectionner le nouveau marqueur
           marker.setIcon(customIcon.selected)
@@ -211,6 +211,10 @@ export default {
           this.selectedMarket = market
         })
       })
+
+      // Recalculer la taille une fois le layout appliqué, sinon les tuiles ne couvrent pas tout le conteneur
+      map.invalidateSize()
+      window.addEventListener('resize', () => map.invalidateSize())
 
       // Calculer les bounds et ajuster la vue
       const bounds = L.latLngBounds(this.markets.map(m => m.coordinates))
@@ -220,9 +224,15 @@ export default {
       })
 
       // Sélectionner le premier marché par défaut
-      this.selectedMarket = this.markets[0]
-      markers[this.markets[0].location].setIcon(customIcon.selected)
-      currentSelectedMarker = markers[this.markets[0].location]
+      // Sélectionner le prochain événement à venir (sinon le dernier de la liste)
+      // ou le marché demandé dans l'URL (?marche=VILLE, depuis le bouton "Voir plus" de l'accueil)
+      const wanted = this.$route && this.$route.query.marche
+      const initial = this.markets.find(m => m.location === wanted)
+        || this.markets.find(m => !this.isPast(m))
+        || this.markets[0]
+      this.selectedMarket = initial
+      markers[initial.location].setIcon(customIcon.selected)
+      currentSelectedMarker = markers[initial.location]
     },
     showImage(imageSrc) {
       this.currentAffiche = imageSrc
@@ -244,6 +254,21 @@ export default {
   background-color: #1D5891;
   border-radius: 50%;
   box-shadow: 0 0 0 2px white;
+}
+
+:deep(.custom-marker.past .marker-inner) {
+  background-color: #9aa5b1;
+}
+
+.past-badge {
+  margin-left: 0.6rem;
+  padding: 0.1rem 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #666;
+  background: #e5e8eb;
+  border-radius: 999px;
+  vertical-align: middle;
 }
 
 :deep(.custom-marker.selected .marker-inner) {
@@ -347,6 +372,9 @@ export default {
 .carousel-slide video {
   display: block;
   max-width: 100%;
+  /* Affiche entière visible sans scroll, même pour un format portrait */
+  max-height: 60vh;
+  width: auto;
   height: auto;
   object-fit: contain;
 }
@@ -498,8 +526,9 @@ export default {
 
   .carousel-slide img,
   .carousel-slide video {
-    width: 100%;
     max-width: 100%;
+    max-height: 60vh;
+    width: auto;
     height: auto;
   }
 

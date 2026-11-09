@@ -285,51 +285,13 @@
   
   .globe-section {
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
   background: white;
 }
 
 .globe-wrapper {
-  border-radius: 15px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  width: 100%;
+  height: clamp(420px, 75vh, 760px);
 }
-
-
-@media (max-width: 480px) {
-  .globe-wrapper {
-    width: 280px;
-    height: 500px;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .globe-wrapper {
-    width: 350px;
-    height: 620px;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .globe-wrapper {
-    width: 400px;
-    height: 710px;
-  }
-}
-
-@media (min-width: 1025px) {
-  .globe-wrapper {
-    width: 450px;
-    height: 800px;
-  }
-}
-
 
 .video-section {
   margin-top: 5rem;

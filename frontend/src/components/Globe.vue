@@ -5,8 +5,6 @@
 </template>
 
 <script>
-import Globe from "globe.gl";
-
 export default {
   name: "Globe",
   data() {
@@ -17,24 +15,17 @@ export default {
   },
   methods: {
     updateGlobeDimensions() {
-      if (window.innerWidth <= 480) {  // Mobile
-        this.globeWidth = 280;
-        this.globeHeight = 500;
-      } else if (window.innerWidth <= 768) {  // Tablette
-        this.globeWidth = 350;
-        this.globeHeight = 620;
-      } else if (window.innerWidth <= 1024) {  // Petit écran
-        this.globeWidth = 400;
-        this.globeHeight = 710;
-      } else {  // Grand écran
-        this.globeWidth = 450;
-        this.globeHeight = 800;
-      }
+      // Le globe occupe toute la largeur et la hauteur de son conteneur
+      this.globeWidth = this.$el.clientWidth || window.innerWidth;
+      this.globeHeight = this.$el.clientHeight || 600;
     },
     initGlobe() {
-      fetch("/datasets/ne_110m_admin_0_countries.geojson")
-        .then((res) => res.json())
-        .then((countries) => {
+      // globe.gl (three.js) est chargé à la demande pour alléger la page d'accueil
+      Promise.all([
+        import("globe.gl"),
+        fetch("/datasets/ne_110m_admin_0_countries.geojson").then((res) => res.json())
+      ])
+        .then(([{ default: Globe }, countries]) => {
           const niameyMarker = {
             lat: 15.4162,
             lng: 6.1698,
@@ -79,7 +70,7 @@ export default {
             const targetView = {
               lat: 15.4162,
               lng: 6.1698,
-              altitude: 1
+              altitude: 1.9
             };
 
             const duration = 5000; // Durée de l'animation en ms
@@ -109,21 +100,35 @@ export default {
           }, 1000); // Délai avant le début du zoom
 
           // Gestion du redimensionnement
-          window.addEventListener('resize', () => {
+          this.resizeObserver = new ResizeObserver(() => {
             this.updateGlobeDimensions();
             world
               .width(this.globeWidth)
               .height(this.globeHeight);
           });
-        });
+          this.resizeObserver.observe(this.$el);
+        })
+        .catch((err) => console.error("Globe:", err));
     }
   },
   mounted() {
     this.updateGlobeDimensions();
-    this.initGlobe();
+    // Ne démarre le globe (et son animation) que lorsqu'il devient visible
+    if (!("IntersectionObserver" in window)) {
+      this.initGlobe();
+      return;
+    }
+    this.observer = new IntersectionObserver((entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        this.observer.disconnect();
+        this.initGlobe();
+      }
+    }, { rootMargin: "200px" });
+    this.observer.observe(this.$el);
   },
   beforeUnmount() {
-    window.removeEventListener('resize', this.updateGlobeDimensions);
+    if (this.observer) this.observer.disconnect();
+    if (this.resizeObserver) this.resizeObserver.disconnect();
   }
 };
 </script>
@@ -142,32 +147,7 @@ export default {
   height: 100%;
 }
 
-/* Styles responsives pour le conteneur */
-@media (max-width: 480px) {
-  .globe-container {
-    max-width: 280px;
-    height: 500px;
-  }
-}
-
-@media (min-width: 481px) and (max-width: 768px) {
-  .globe-container {
-    max-width: 350px;
-    height: 620px;
-  }
-}
-
-@media (min-width: 769px) and (max-width: 1024px) {
-  .globe-container {
-    max-width: 400px;
-    height: 710px;
-  }
-}
-
-@media (min-width: 1025px) {
-  .globe-container {
-    max-width: 450px;
-    height: 800px;
-  }
+#globeViz :deep(canvas) {
+  display: block;
 }
 </style>
