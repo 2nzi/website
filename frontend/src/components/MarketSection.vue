@@ -126,6 +126,18 @@ export default {
           ],
           coordinates: [47.3917, -1.1567]
         },
+        {
+          location: 'BLAIN',
+          date: '28/29 novembre, 5/6, 12/13 et 19/20 décembre 2026',
+          endDate: '2026-12-20',
+          venue: 'Marché de Noël – Château de la Groulais',
+          address: 'Château de la Groulais, 44130 Blain',
+          description: 'La magie de Noël au château : 4 week-ends, entrée gratuite. Samedi 12h-20h, dimanche 10h-19h. Artisanat, gastronomie, décoration, idées cadeaux, animations et restauration sur place.',
+          media: [
+            { type: 'image', src: '/affiche-blain.webp' }
+          ],
+          coordinates: [47.4745, -1.7590]
+        },
       ]
     }
   },
